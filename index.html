@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4CAF50"> <!-- 设置主题颜色 -->
+    <link rel="manifest" href="manifest.json"> <!-- 引用 manifest 文件 -->
+    <title>日常开销记录</title>
+    <style>
+        /* 你的样式代码 */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .expense-form {
+            margin-bottom: 20px;
+        }
+        .expense-form input, .expense-form button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .expense-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .expense-list li {
+            padding: 10px;
+            background-color: #fff;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>日常开销记录</h1>
+
+    <div class="expense-form">
+        <input type="number" id="amount" placeholder="金额" required>
+        <input type="text" id="description" placeholder="描述" required>
+        <button onclick="addExpense()">添加</button>
+    </div>
+
+    <ul id="expense-list" class="expense-list"></ul>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker 注册成功: ', registration);
+                })
+                .catch((error) => {
+                    console.log('Service Worker 注册失败: ', error);
+                });
+        });
+    }
+        // 获取已保存的开销记录
+        function loadExpenses() {
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            const expenseList = document.getElementById('expense-list');
+            expenseList.innerHTML = ''; // 清空当前列表
+
+            expenses.forEach(expense => {
+                const li = document.createElement('li');
+                li.textContent = `金额: ¥${expense.amount}, 描述: ${expense.description}`;
+                expenseList.appendChild(li);
+            });
+        }
+
+        // 添加开销记录
+        function addExpense() {
+            const amount = document.getElementById('amount').value;
+            const description = document.getElementById('description').value;
+
+            if (amount && description) {
+                const newExpense = { amount, description };
+                let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+                expenses.push(newExpense);
+
+                // 保存回 LocalStorage
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+
+                // 重新加载开销记录
+                loadExpenses();
+
+                // 清空输入框
+                document.getElementById('amount').value = '';
+                document.getElementById('description').value = '';
+            } else {
+                alert('请填写金额和描述');
+            }
+        }
+
+        // 初始化加载开销记录
+        loadExpenses();
+    </script>
+</body>
+</html>
