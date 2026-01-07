@@ -6,9 +6,13 @@ import {
 
 /* 🔴 换成你自己的 Firebase 配置 */
 const firebaseConfig = {
-  apiKey: "你的",
-  authDomain: "你的",
-  projectId: "你的",
+  apiKey: "AIzaSyCx3hx9kuenBtdN1KBJJnPwc2H9BjH2SZI",
+  authDomain: "my-account-book-b4635.firebaseapp.com",
+  projectId: "my-account-book-b4635",
+  storageBucket: "my-account-book-b4635.firebasestorage.app",
+  messagingSenderId: "1044755389880",
+  appId: "1:1044755389880:web:50dfe83f8ad363988b834d",
+  measurementId: "G-6H58C7HDQX"
 }
 
 const app = initializeApp(firebaseConfig)
@@ -89,3 +93,4 @@ window.exportExcel=()=>{
 }
 
 if(recordList) loadRecords()
+
