@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>个人记账</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== 主页 ===== -->
+  <section id="home" class="page active">
+    <div class="card highlight">
+      <div class="label">当月余额</div>
+      <div id="monthBalance" class="big">0฿</div>
+      <div class="sub">今日可用：<span id="dayBalance">0฿</span></div>
+    </div>
+
+    <div class="card">
+      <input id="amount" type="number" placeholder="金额 (฿)">
+      <input id="note" type="text" placeholder="备注">
+      <button onclick="addRecord()">记一笔</button>
+    </div>
+
+    <div class="card">
+      <h3>今日记录</h3>
+      <ul id="list"></ul>
+    </div>
+  </section>
+
+  <!-- ===== 查询 ===== -->
+  <section id="query" class="page">
+    <div class="card">
+      <input id="queryDate" type="date">
+      <button onclick="queryByDate()">查询</button>
+    </div>
+
+    <div class="card">
+      <h3>查询结果</h3>
+      <ul id="queryList"></ul>
+      <div class="total">合计：<span id="queryTotal">0</span>฿</div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="tab">
+  <button onclick="showPage('home')">🏠 主页</button>
+  <button onclick="showPage('query')">🔍 查询</button>
+</nav>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
