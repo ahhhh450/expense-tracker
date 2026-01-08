@@ -39,7 +39,13 @@ async function addRecord() {
   loadRecords()
 }
 window.addRecord = addRecord   // ⭐ 关键：给 HTML onclick 用
+function saveDailyLimit() {
+  const dailyLimitInput = document.getElementById('dailyLimitInput')
+  localStorage.setItem('dailyLimit', dailyLimitInput.value)
+  alert('已保存')
+}
 
+window.saveDailyLimit = saveDailyLimit
 /* ===== 删除 ===== */
 window.deleteRecord = async (id) => {
   if (!confirm('确定删除？')) return
@@ -78,3 +84,4 @@ function render(id, d) {
 if (recordList) {
   loadRecords()
 }
+
