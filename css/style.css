@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f7f8fa;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC";
+  color: #111827;
+}
+
+.page {
+  padding: 16px;
+  padding-bottom: 90px; /* 给底部 Tab 留空间 */
+}
+
+.title {
+  margin: 8px 0 16px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* ===== 卡片区 ===== */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+.label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.value {
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.value.negative {
+  color: #dc2626;
+}
+
+/* ===== 输入 ===== */
+.input-card {
+  margin-top: 18px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+.input-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.input-card button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 16px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+}
+
+/* ===== 记录 ===== */
+.record-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 14px;
+}
+
+.record-item {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ===== 底部 Tab ===== */
+.tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -6px 24px rgba(0,0,0,0.06);
+}
+
+.tab {
+  text-decoration: none;
+  color: #9ca3af;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+}
+
+.tab span {
+  font-size: 20px;
+}
+
+.tab.active {
+  color: #2563eb;
+  font-weight: 600;
+}

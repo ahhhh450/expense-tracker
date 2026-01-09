@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>查询</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main class="page">
+  <h1 class="title">查询</h1>
+
+  <div class="input-card">
+    <input type="date" id="searchDate">
+    <button onclick="searchByDate()">查询</button>
+  </div>
+
+  <ul id="recordList" class="record-list"></ul>
+</main>
+
+<nav class="tab-bar">
+  <a class="tab" href="index.html"><span>🏠</span><em>主页</em></a>
+  <a class="tab active" href="search.html"><span>🔍</span><em>查询</em></a>
+  <a class="tab" href="settings.html"><span>⚙️</span><em>设置</em></a>
+</nav>
+
+<script type="module" src="js/search.js"></script>
+</body>
+</html>

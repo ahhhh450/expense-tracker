@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>设置</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main class="page">
+  <h1 class="title">设置</h1>
+
+  <div class="input-card">
+    <label>每日额度（THB）</label>
+    <input id="dailyLimitInput" type="number">
+    <button onclick="saveDailyLimit()">保存</button>
+  </div>
+</main>
+
+<nav class="tab-bar">
+  <a class="tab" href="index.html"><span>🏠</span><em>主页</em></a>
+  <a class="tab" href="search.html"><span>🔍</span><em>查询</em></a>
+  <a class="tab active" href="settings.html"><span>⚙️</span><em>设置</em></a>
+</nav>
+
+<script type="module" src="js/settings.js"></script>
+</body>
+</html>

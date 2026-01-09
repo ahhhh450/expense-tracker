@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>记账</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main class="page">
+
+  <h1 class="title">记账本</h1>
+
+  <section class="cards">
+    <div class="card">
+      <div class="label">今日额度</div>
+      <div class="value" id="todayLimit">0</div>
+    </div>
+    <div class="card">
+      <div class="label">今日支出</div>
+      <div class="value negative" id="todaySpent">0</div>
+    </div>
+    <div class="card">
+      <div class="label">当月额度</div>
+      <div class="value" id="monthLimit">0</div>
+    </div>
+    <div class="card">
+      <div class="label">当月支出</div>
+      <div class="value negative" id="monthSpent">0</div>
+    </div>
+  </section>
+
+  <section class="input-card">
+    <input id="amountInput" type="number" placeholder="金额（THB）">
+    <input id="noteInput" type="text" placeholder="备注（可选）">
+    <button onclick="addRecord()">记一笔</button>
+  </section>
+
+  <ul id="recordList" class="record-list"></ul>
+
+</main>
+
+<nav class="tab-bar">
+  <a class="tab active" href="index.html"><span>🏠</span><em>主页</em></a>
+  <a class="tab" href="search.html"><span>🔍</span><em>查询</em></a>
+  <a class="tab" href="settings.html"><span>⚙️</span><em>设置</em></a>
+</nav>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
