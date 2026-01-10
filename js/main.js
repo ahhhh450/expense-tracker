@@ -19,7 +19,7 @@ const todayStr = now.toISOString().slice(0, 10);   // YYYY-MM-DD
 const monthStr = todayStr.slice(0, 7);             // YYYY-MM
 const year = now.getFullYear();
 const monthIndex = now.getMonth();
-const todayDate = now.getDate();                    // 今天是几号
+const todayDate = now.getDate();                   // 今天是几号
 
 /* ===== 配置 ===== */
 function getDailyLimit() {
@@ -70,46 +70,58 @@ async function loadRecords() {
 
   let todaySpent = 0;
   let monthSpent = 0;
+  let hasTodayRecord = false;
 
   snap.forEach(d => {
     const r = d.data();
 
-    // 今日支出
+    /* ===== 统计 ===== */
     if (r.date === todayStr) {
       todaySpent += r.amount;
     }
-
-    // 当月累计支出
     if (r.date.startsWith(monthStr)) {
       monthSpent += r.amount;
     }
 
-    // 渲染列表
-    const li = document.createElement("li");
-    li.className = "record-item";
-    li.innerHTML = `
-      <div class="amount">฿ ${r.amount}</div>
-      <div class="sub">${r.date} ${r.note || ""}</div>
-      <button onclick="deleteRecord('${d.id}')">删除</button>
-    `;
-    recordList.appendChild(li);
+    /* ===== 只渲染今天的记录 ===== */
+    if (r.date === todayStr) {
+      hasTodayRecord = true;
+
+      const li = document.createElement("li");
+      li.className = "record-item";
+      li.innerHTML = `
+        <div class="amount">฿ ${r.amount}</div>
+        <div class="sub">${r.note || ""}</div>
+        <button onclick="deleteRecord('${d.id}')">删除</button>
+      `;
+      recordList.appendChild(li);
+    }
   });
 
-  /* ===== 额度计算（你确认的最终模型） ===== */
+  /* ===== 今天无记录提示 ===== */
+  if (!hasTodayRecord) {
+    recordList.innerHTML = `
+      <li class="record-item empty">
+        今天还没有记账
+      </li>
+    `;
+  }
+
+  /* ===== 额度计算（最终确认模型） ===== */
 
   const dailyLimit = getDailyLimit();
 
-  // 已过天数（从 1 号开始）
+  // 已过天数（从 1 号算）
   const daysPassed = todayDate;
 
   // 当月总天数
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
 
-  // ✅ 今日额度 = 累计基础额度 - 当月累计支出
+  // 今日额度 = 累计基础额度 - 当月累计支出
   const todayLimit =
     daysPassed * dailyLimit - monthSpent;
 
-  // ✅ 当月额度 = 当月总额度 - 当月累计支出
+  // 当月额度 = 当月总额度 - 当月累计支出
   const monthLimit =
     daysInMonth * dailyLimit - monthSpent;
 
