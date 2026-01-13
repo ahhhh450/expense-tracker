@@ -25,7 +25,51 @@ const todayDate = now.getDate();                   // 今天是几号
 function getDailyLimit() {
   return Number(localStorage.getItem("dailyLimit")) || 500;
 }
+/* ===== 导出 CSV ===== */
+window.exportRecords = async () => {
+  const snap = await getDocs(collection(db, "records"));
 
+  if (snap.empty) {
+    alert("没有可导出的记录");
+    return;
+  }
+
+  // CSV 表头
+  const rows = [
+    ["日期", "金额(THB)", "金额(CNY)", "备注"]
+  ];
+
+  snap.forEach(d => {
+    const r = d.data();
+    rows.push([
+      r.date,
+      r.amount,
+      r.cny ?? "",
+      r.note ?? ""
+    ]);
+  });
+
+  // 转 CSV 字符串
+  const csvContent = rows
+    .map(row =>
+      row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")
+    )
+    .join("\n");
+
+  // 下载
+  const blob = new Blob(
+    ["\uFEFF" + csvContent], // 防止中文乱码
+    { type: "text/csv;charset=utf-8;" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `记账记录_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
 /* ===== 汇率 ===== */
 async function getRate() {
   const r = await fetch("https://open.er-api.com/v6/latest/THB");
@@ -134,3 +178,4 @@ async function loadRecords() {
 
 /* ===== 初始化 ===== */
 loadRecords();
+
