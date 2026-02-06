@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 import {
   collection,
   addDoc,
@@ -7,6 +7,10 @@ import {
   doc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+  signInAnonymously,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 /* ===== DOM ===== */
 const amountInput = document.getElementById("amountInput");
@@ -19,7 +23,7 @@ const todayStr = now.toISOString().slice(0, 10);   // YYYY-MM-DD
 const monthStr = todayStr.slice(0, 7);             // YYYY-MM
 const year = now.getFullYear();
 const monthIndex = now.getMonth();
-const todayDate = now.getDate();                   // 今天是几号
+const todayDate = now.getDate();
 
 /* ===== 配置 ===== */
 function getDailyLimit() {
@@ -33,6 +37,13 @@ async function getRate() {
   return d.rates.CNY;
 }
 
+/* ===== 用户 records 集合 ===== */
+function getUserRecordsCol() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error("用户未登录");
+  return collection(db, "users", uid, "records");
+}
+
 /* ===== 新增记录 ===== */
 window.addRecord = async () => {
   const amount = Number(amountInput.value);
@@ -43,7 +54,7 @@ window.addRecord = async () => {
 
   const rate = await getRate();
 
-  await addDoc(collection(db, "records"), {
+  await addDoc(getUserRecordsCol(), {
     amount,
     note: noteInput.value || "",
     date: todayStr,
@@ -59,13 +70,13 @@ window.addRecord = async () => {
 /* ===== 删除记录 ===== */
 window.deleteRecord = async (id) => {
   if (!confirm("确定删除？")) return;
-  await deleteDoc(doc(db, "records", id));
+  await deleteDoc(doc(getUserRecordsCol(), id));
   loadRecords();
 };
 
 /* ===== 主逻辑 ===== */
 async function loadRecords() {
-  const snap = await getDocs(collection(db, "records"));
+  const snap = await getDocs(getUserRecordsCol());
   recordList.innerHTML = "";
 
   let todaySpent = 0;
@@ -75,7 +86,6 @@ async function loadRecords() {
   snap.forEach(d => {
     const r = d.data();
 
-    /* ===== 统计 ===== */
     if (r.date === todayStr) {
       todaySpent += r.amount;
     }
@@ -83,7 +93,6 @@ async function loadRecords() {
       monthSpent += r.amount;
     }
 
-    /* ===== 只渲染今天的记录 ===== */
     if (r.date === todayStr) {
       hasTodayRecord = true;
 
@@ -98,7 +107,6 @@ async function loadRecords() {
     }
   });
 
-  /* ===== 今天无记录提示 ===== */
   if (!hasTodayRecord) {
     recordList.innerHTML = `
       <li class="record-item empty">
@@ -107,32 +115,27 @@ async function loadRecords() {
     `;
   }
 
-  /* ===== 额度计算（最终确认模型） ===== */
-
   const dailyLimit = getDailyLimit();
-
-  // 已过天数（从 1 号算）
   const daysPassed = todayDate;
-
-  // 当月总天数
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
 
-  // 今日额度 = 累计基础额度 - 当月累计支出
   const todayLimit =
     daysPassed * dailyLimit - monthSpent;
 
-  // 当月额度 = 当月总额度 - 当月累计支出
   const monthLimit =
     daysInMonth * dailyLimit - monthSpent;
 
-  /* ===== 写入页面 ===== */
   document.getElementById("todayLimit").textContent = todayLimit;
   document.getElementById("todaySpent").textContent = todaySpent;
   document.getElementById("monthLimit").textContent = monthLimit;
   document.getElementById("monthSpent").textContent = monthSpent;
 }
 
-/* ===== 初始化 ===== */
-loadRecords();
+/* ===== 启动：匿名登录 → 加载数据 ===== */
+signInAnonymously(auth);
 
-
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loadRecords();
+  }
+});
